@@ -10,8 +10,12 @@
         <ul id="menuList">
 			<li >
 				  Visiteur :<br>
-				<?php echo $_SESSION['prenom']."  ".$_SESSION['nom']  ?>
+				<?php echo $_SESSION['prenom']."  ".$_SESSION['nom']."  " .$_SESSION['comptable'] ?>
 			</li>
+            <?php
+            if ($_SESSION['comptable']==0){
+           
+            ?>
            <li class="smenu">
               <a href="index.php?uc=gererFrais&action=saisirFrais" title="Saisie fiche de frais ">Saisie fiche de frais</a>
            </li>
@@ -24,4 +28,4 @@
          </ul>
         
     </div>
-    
+            <?php } ?>
