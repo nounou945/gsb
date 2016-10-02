@@ -35,8 +35,8 @@ switch($action){
  break ;  
         }
 
-    case "ficheFrais":
-        $idVisiteur=$_POST['lstVisiteurs'];
+    case "infoFiche":
+        $idVisiteur=$_POST['lstVisiteur'];
            $leMois=$_POST['mois'];
            echo $leMois.$idVisiteur;
 		

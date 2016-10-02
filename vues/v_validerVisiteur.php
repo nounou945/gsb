@@ -1,12 +1,14 @@
       
-       <h3>visiteurs  à sélectionner : </h3>
-      <form action="index.php?uc=suivreFrais&action=ficheFrais" method="post">
+       <h3>visiteurs  Ã  sÃ©lectionner : </h3>
+      <form action="index.php?uc=suivreFrais&action=infoFiche" method="post">
       <div class="corpsForm">
          
       <p>
 	 
         <label for="lstVisiteurs" accesskey="n">Visiteurs : </label>
-        <select id="lstVisiteurs" name="lstVisiteurs">
+        <select id="lstVisiteur" name="lstVisiteur">
+       <h3>visiteurs  à sélectionner : </h3>
+      
             <?php
 			foreach ($lesVisiteurs as $unVisiteur)
 			{

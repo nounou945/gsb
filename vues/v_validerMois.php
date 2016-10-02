@@ -1,5 +1,5 @@
 ﻿ <div id="contenu">
-      <h2>Mes fiches de frais</h2>
+      <h2>fiches de frais � valider</h2>
       <h3>Mois à sélectionner : </h3>
       <form action="index.php?uc=suivreFrais&action=validerMois" method="post">
       <div class="corpsForm">
@@ -32,10 +32,12 @@
       </p>
       </div>
       <div class="piedForm">
+          <?php if(empty($_POST['lstMois'])){?>
       <p>
         <input id="ok" type="submit" value="Valider" size="20" />
         <input id="annuler" type="reset" value="Effacer" size="20" />
       </p> 
+          <?php } ?>
       </div>
         
       </form><?php
