@@ -269,6 +269,51 @@ class PdoGsb{
 		}
 		return $lesMois;
 	}
+        
+        /**
+         * retourne les mois disponibles selon les comptables qui on des fiches de  ‡ valider.
+         * @return type
+         */
+        public function getLesMoisDisponibles2(){
+		$req = "select fichefrais.mois as mois from  fichefrais where fichefrais.idvisiteur in(select id from visiteur where comptable=0)
+                    and idetat='va'
+		order by fichefrais.mois desc ";
+		$res = PdoGsb::$monPdo->query($req);
+		$lesMois =array();
+		$laLigne = $res->fetch();
+		while($laLigne != null)	{
+			$mois = $laLigne['mois'];
+			$numAnnee =substr( $mois,0,4);
+			$numMois =substr( $mois,4,2);
+			$lesMois["$mois"]=array(
+		     "mois"=>"$mois",
+		    "numAnnee"  => "$numAnnee",
+			"numMois"  => "$numMois"
+             );
+			$laLigne = $res->fetch(); 		
+		}
+		return $lesMois;
+	}
+        public function getLesVisiteurs($mois){
+		$req = "select visiteur.id,visiteur.nom,visiteur.prenom from visiteur where visiteur.id in "
+                        . "(select fichefrais.idvisiteur from fichefrais where fichefrais.mois='$mois' and fichefrais.idetat='va') 
+		order by nom desc ";
+		$res = PdoGsb::$monPdo->query($req);
+		$lesVisiteurs =array();
+		$laLigne = $res->fetch();
+		while($laLigne != null)	{
+			$selection = $laLigne['id'];
+                        $nom=$laLigne['nom'];
+                        $prenom=$laLigne['prenom'];
+			$lesVisiteurs["$selection"]=array(
+                            "id"=>"$selection",
+		     "nom"=>"$nom",
+                            "prenom"=>"$prenom"
+             );
+			$laLigne = $res->fetch(); 		
+		}
+		return $lesVisiteurs;
+	}
 /**
  * Retourne les informations d'une fiche de frais d'un visiteur pour un mois donn√©
  

@@ -8,10 +8,9 @@
 
 include("vues/v_sommaire.php");
 ($action=$_REQUEST['action']);
-$idVisiteur=$_SESSION['idVisiteur'];
 switch($action){
     case "validerMois" :
-    {$lesMois=$pdo->getLesMoisDisponibles($idVisiteur);
+    {$lesMois=$pdo->getLesMoisDisponibles2(); //  utilisation de la nouvelle fonction
 		// Afin de sélectionner par défaut le dernier mois dans la zone de liste
 		// on demande toutes les clés, et on prend la première,
 		// les mois étant triés décroissants
@@ -19,11 +18,21 @@ switch($action){
 		$moisASelectionner = $lesCles[0];
         include("vues/v_validerMois.php");
         
+        if (isset($_POST['lstMois'])){
+           $mois=$_POST['lstMois']; 
+            $lesVisiteurs=$pdo->getLesVisiteurs($mois);
+               $lesCles= array_keys($lesVisiteurs);
+               $idASelectionner=$lesCles[0];
+            include("vues/v_validerVisiteur.php");
+        }
+        
+                
  break ;  
         }
 
     case "validerVisiteur":
-        include("vues/v_validerVisiteur.php");
+        
+        
     break;
         
     }
