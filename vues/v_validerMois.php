@@ -1,7 +1,7 @@
 ﻿ <div id="contenu">
       <h2>Mes fiches de frais</h2>
       <h3>Mois à sélectionner : </h3>
-      <form action="index.php?uc=suivreFrais&action=validerVisiteur" method="post">
+      <form action="index.php?uc=suivreFrais&action=validerMois" method="post">
       <div class="corpsForm">
          
       <p>
