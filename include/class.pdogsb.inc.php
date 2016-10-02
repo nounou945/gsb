@@ -1,6 +1,6 @@
-ï»¿<?php
+<?php
 /** 
- * Classe d'accÃ¨s aux donnÃ©es. 
+ * Classe d'accès aux données. 
  
  * Utilise les services de la classe PDO
  * pour l'application GSB
@@ -23,8 +23,8 @@ class PdoGsb{
 		private static $monPdo;
 		private static $monPdoGsb=null;
 /**
- * Constructeur privÃ©, crÃ©e l'instance de PDO qui sera sollicitÃ©e
- * pour toutes les mÃ©thodes de la classe
+ * Constructeur privé, crée l'instance de PDO qui sera sollicitée
+ * pour toutes les méthodes de la classe
  */				
 	private function __construct(){
     	PdoGsb::$monPdo = new PDO(PdoGsb::$serveur.';'.PdoGsb::$bdd, PdoGsb::$user, PdoGsb::$mdp); 
@@ -34,7 +34,7 @@ class PdoGsb{
 		PdoGsb::$monPdo = null;
 	}
 /**
- * Fonction statique qui crÃ©e l'unique instance de la classe
+ * Fonction statique qui crée l'unique instance de la classe
  
  * Appel : $instancePdoGsb = PdoGsb::getPdoGsb();
  
@@ -51,7 +51,7 @@ class PdoGsb{
  
  * @param $login 
  * @param $mdp
- * @return l'id, le nom et le prÃ©nom sous la forme d'un tableau associatif 
+ * @return l'id, le nom et le prénom sous la forme d'un tableau associatif 
 */
 	public function getInfosVisiteur($login, $mdp){
 		$req = "select visiteur.id as id, visiteur.nom as nom, visiteur.prenom as prenom,visiteur.comptable as comptable from visiteur 
@@ -63,10 +63,10 @@ class PdoGsb{
 
 /**
  * Retourne sous forme d'un tableau associatif toutes les lignes de frais hors forfait
- * concernÃ©es par les deux arguments
+ * concernées par les deux arguments
  
- * La boucle foreach ne peut Ãªtre utilisÃ©e ici car on procÃ¨de
- * Ã  une modification de la structure itÃ©rÃ©e - transformation du champ date-
+ * La boucle foreach ne peut être utilisée ici car on procède
+ * à une modification de la structure itérée - transformation du champ date-
  
  * @param $idVisiteur 
  * @param $mois sous la forme aaaamm
@@ -85,7 +85,7 @@ class PdoGsb{
 		return $lesLignes; 
 	}
 /**
- * Retourne le nombre de justificatif d'un visiteur pour un mois donnÃ©
+ * Retourne le nombre de justificatif d'un visiteur pour un mois donné
  
  * @param $idVisiteur 
  * @param $mois sous la forme aaaamm
@@ -99,11 +99,11 @@ class PdoGsb{
 	}
 /**
  * Retourne sous forme d'un tableau associatif toutes les lignes de frais au forfait
- * concernÃ©es par les deux arguments
+ * concernées par les deux arguments
  
  * @param $idVisiteur 
  * @param $mois sous la forme aaaamm
- * @return l'id, le libelle et la quantitÃ© sous la forme d'un tableau associatif 
+ * @return l'id, le libelle et la quantité sous la forme d'un tableau associatif 
 */
 	public function getLesFraisForfait($idVisiteur, $mois){
 		$req = "select fraisforfait.id as idfrais, fraisforfait.libelle as libelle, 
@@ -127,14 +127,14 @@ class PdoGsb{
 		return $lesLignes;
 	}
 /**
- * Met Ã  jour la table ligneFraisForfait
+ * Met à jour la table ligneFraisForfait
  
- * Met Ã  jour la table ligneFraisForfait pour un visiteur et
- * un mois donnÃ© en enregistrant les nouveaux montants
+ * Met à jour la table ligneFraisForfait pour un visiteur et
+ * un mois donné en enregistrant les nouveaux montants
  
  * @param $idVisiteur 
  * @param $mois sous la forme aaaamm
- * @param $lesFrais tableau associatif de clÃ© idFrais et de valeur la quantitÃ© pour ce frais
+ * @param $lesFrais tableau associatif de clé idFrais et de valeur la quantité pour ce frais
  * @return un tableau associatif 
 */
 	public function majFraisForfait($idVisiteur, $mois, $lesFrais){
@@ -149,8 +149,8 @@ class PdoGsb{
 		
 	}
 /**
- * met Ã  jour le nombre de justificatifs de la table ficheFrais
- * pour le mois et le visiteur concernÃ©
+ * met à jour le nombre de justificatifs de la table ficheFrais
+ * pour le mois et le visiteur concerné
  
  * @param $idVisiteur 
  * @param $mois sous la forme aaaamm
@@ -161,7 +161,7 @@ class PdoGsb{
 		PdoGsb::$monPdo->exec($req);	
 	}
 /**
- * Teste si un visiteur possÃ¨de une fiche de frais pour le mois passÃ© en argument
+ * Teste si un visiteur possède une fiche de frais pour le mois passé en argument
  
  * @param $idVisiteur 
  * @param $mois sous la forme aaaamm
@@ -194,10 +194,10 @@ class PdoGsb{
 	}
 	
 /**
- * CrÃ©e une nouvelle fiche de frais et les lignes de frais au forfait pour un visiteur et un mois donnÃ©s
+ * Crée une nouvelle fiche de frais et les lignes de frais au forfait pour un visiteur et un mois donnés
  
- * rÃ©cupÃ¨re le dernier mois en cours de traitement, met Ã  'CL' son champs idEtat, crÃ©e une nouvelle fiche de frais
- * avec un idEtat Ã  'CR' et crÃ©e les lignes de frais forfait de quantitÃ©s nulles 
+ * récupère le dernier mois en cours de traitement, met à 'CL' son champs idEtat, crée une nouvelle fiche de frais
+ * avec un idEtat à 'CR' et crée les lignes de frais forfait de quantités nulles 
  * @param $idVisiteur 
  * @param $mois sous la forme aaaamm
 */
@@ -220,13 +220,13 @@ class PdoGsb{
 		 }
 	}
 /**
- * CrÃ©e un nouveau frais hors forfait pour un visiteur un mois donnÃ©
- * Ã  partir des informations fournies en paramÃ¨tre
+ * Crée un nouveau frais hors forfait pour un visiteur un mois donné
+ * à partir des informations fournies en paramètre
  
  * @param $idVisiteur 
  * @param $mois sous la forme aaaamm
  * @param $libelle : le libelle du frais
- * @param $date : la date du frais au format franÃ§ais jj//mm/aaaa
+ * @param $date : la date du frais au format français jj//mm/aaaa
  * @param $montant : le montant
 */
 	public function creeNouveauFraisHorsForfait($idVisiteur,$mois,$libelle,$date,$montant){
@@ -236,7 +236,7 @@ class PdoGsb{
 		PdoGsb::$monPdo->exec($req);
 	}
 /**
- * Supprime le frais hors forfait dont l'id est passÃ© en argument
+ * Supprime le frais hors forfait dont l'id est passé en argument
  
  * @param $idFrais 
 */
@@ -248,7 +248,7 @@ class PdoGsb{
  * Retourne les mois pour lesquel un visiteur a une fiche de frais
  
  * @param $idVisiteur 
- * @return un tableau associatif de clÃ© un mois -aaaamm- et de valeurs l'annÃ©e et le mois correspondant 
+ * @return un tableau associatif de clé un mois -aaaamm- et de valeurs l'année et le mois correspondant 
 */
 	public function getLesMoisDisponibles($idVisiteur){
 		$req = "select fichefrais.mois as mois from  fichefrais where fichefrais.idvisiteur ='$idVisiteur' 
@@ -271,7 +271,7 @@ class PdoGsb{
 	}
         
         /**
-         * retourne les mois disponibles selon les comptables qui on des fiches de  à valider.
+         * retourne les mois disponibles selon les comptables qui on des fiches de  ?alider.
          * @return type
          */
         public function getLesMoisDisponibles2(){
@@ -315,24 +315,24 @@ class PdoGsb{
 		return $lesVisiteurs;
 	}
 /**
- * Retourne les informations d'une fiche de frais d'un visiteur pour un mois donnÃ©
+ * Retourne les informations d'une fiche de frais d'un visiteur pour un mois donné
  
  * @param $idVisiteur 
  * @param $mois sous la forme aaaamm
- * @return un tableau avec des champs de jointure entre une fiche de frais et la ligne d'Ã©tat 
+ * @return un tableau avec des champs de jointure entre une fiche de frais et la ligne d'état 
 */	
 	public function getLesInfosFicheFrais($idVisiteur,$mois){
-		$req = "select ficheFrais.idEtat as idEtat, ficheFrais.dateModif as dateModif, ficheFrais.nbJustificatifs as nbJustificatifs, 
-			ficheFrais.montantValide as montantValide, etat.libelle as libEtat from  fichefrais inner join Etat on ficheFrais.idEtat = Etat.id 
-			where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois = '$mois'";
+		$req = "select fichefrais.idetat as idetat, fichefrais.datemodif as datemodif, fichefrais.nbjustificatifs as nbjustificatifs, 
+fichefrais.montantValide as montantvalide, etat.libelle as libetat from  fichefrais inner join etat on fichefrais.idetat = etat.id 
+where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois ='$mois'";
 		$res = PdoGsb::$monPdo->query($req);
 		$laLigne = $res->fetch();
 		return $laLigne;
 	}
 /**
- * Modifie l'Ã©tat et la date de modification d'une fiche de frais
+ * Modifie l'état et la date de modification d'une fiche de frais
  
- * Modifie le champ idEtat et met la date de modif Ã  aujourd'hui
+ * Modifie le champ idEtat et met la date de modif à aujourd'hui
  * @param $idVisiteur 
  * @param $mois sous la forme aaaamm
  */

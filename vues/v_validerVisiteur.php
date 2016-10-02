@@ -6,11 +6,11 @@
       <p>
 	 
         <label for="lstVisiteurs" accesskey="n">Visiteurs : </label>
-        <select id="lstVisiteurs" name="lstVisiteur">
+        <select id="lstVisiteur" name="lstVisiteur">
             <?php
 			foreach ($lesVisiteurs as $unVisiteur)
 			{
-			    $id = $unVisiteur['selection'];
+			    $id = $unVisiteur['id'];
 				$nom =  $unVisiteur['nom'];
 				$prenom =  $unVisiteur['prenom'];
 				if($id == $idASelectionner){
