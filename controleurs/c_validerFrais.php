@@ -23,7 +23,7 @@ switch($action){
     case "consulterFicheDetail":
                $idVisiteur=$_POST['lstVisiteur'];
                $leMois=$_POST['lstMois'];
-               echo $leMois.$idVisiteur;
+               
 
 		$lesFraisHorsForfait = $pdo->getLesFraisHorsForfait($idVisiteur,$leMois);
 		$lesFraisForfait= $pdo->getLesFraisForfait($idVisiteur,$leMois);

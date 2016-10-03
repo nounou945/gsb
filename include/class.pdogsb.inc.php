@@ -274,7 +274,11 @@ class PdoGsb{
          * retourne les mois disponibles selon les comptables qui on des fiches de  ?alider.
          * @return type
          */
-        public function getLesMoisDisponibles2(){
+        /**
+         * retourne les mois ou les visiteurs ont des fiches de frais à l'etat cr
+         * @return type
+         */
+        public function getLesMoisDisponibles2(){ 
 		$req = "select fichefrais.mois as mois from  fichefrais where fichefrais.idvisiteur in(select id from visiteur where comptable=0)
                     and idetat='cr'
 		order by fichefrais.mois desc ";
@@ -294,6 +298,11 @@ class PdoGsb{
 		}
 		return $lesMois;
 	}
+        /**
+         * retourne la liste des visiteurs qui ont des fiches de frais pour le mois selectioné
+         * @param type $mois
+         * @return type
+         */
         public function getLesVisiteurs($mois){
 		$req = "select visiteur.id,visiteur.nom,visiteur.prenom from visiteur where visiteur.id in "
                         . "(select fichefrais.idvisiteur from fichefrais where fichefrais.mois='$mois' and fichefrais.idetat='cr') 
@@ -308,7 +317,7 @@ class PdoGsb{
 			$lesVisiteurs["$selection"]=array(
                         "id"=>"$selection",
                         "nom"=>"$nom",
-                            "prenom"=>"$prenom"
+                         "prenom"=>"$prenom"
              );
 			$laLigne = $res->fetch(); 		
 		}
@@ -342,7 +351,11 @@ where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois ='$mois'";
 		where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois = '$mois'";
 		PdoGsb::$monPdo->exec($req);
 	}
-      public function getAllVisiteurs(){
+      /**
+       * permet d'avoir la liste de tous les visiteurs 
+       * @return type
+       */
+        public function getAllVisiteurs(){
 		$req ="select * from visiteur where comptable=0";
 		
 		$res = PdoGsb::$monPdo->query($req);
@@ -361,7 +374,10 @@ where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois ='$mois'";
 		}
 		return $lesVisiteurs;
 	}
-        
+        /**
+         * permet de reporter les frais hors forfait 
+         * @param type $idFrais
+         */
         public function reporterFraisHorsForfait($idFrais){
 		$req = "update lignefraishorsforfait set mois=mois+1 where id='$idFrais'";
 		PdoGsb::$monPdo->exec($req);

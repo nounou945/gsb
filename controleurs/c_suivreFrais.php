@@ -19,19 +19,19 @@ switch($action){
         include("vues/v_validerMois.php");
         
         if (isset($_POST['lstMois'])){
-           $mois=$_POST['lstMois']; 
-            $lesVisiteurs=$pdo->getLesVisiteurs($mois);
+               $mois=$_POST['lstMois']; 
+               $lesVisiteurs=$pdo->getLesVisiteurs($mois);
                $lesCles= array_keys($lesVisiteurs);
                $idASelectionner=$lesCles[0];
-               var_dump($lesCles);
+              
             include("vues/v_validerVisiteur.php");
         
             
         }
        if(isset($_POST["lstVisiteur"])){
                 $idVisiteur=$_POST['lstVisiteur'];
-           $leMois=$_POST['mois'];
-           echo $leMois.$idVisiteur;
+                 $leMois=$_POST['mois'];
+           
 		
 		$lesFraisHorsForfait = $pdo->getLesFraisHorsForfait($idVisiteur,$leMois);
 		$lesFraisForfait= $pdo->getLesFraisForfait($idVisiteur,$leMois);
