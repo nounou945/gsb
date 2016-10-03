@@ -18,8 +18,13 @@ switch($action){
 		$moisASelectionner = $lesCles[0];
         include("vues/v_validerMois.php");
         
-        if (isset($_POST['lstMois'])){
-           $mois=$_POST['lstMois']; 
+        if (isset($_POST['lstMois'])||isset($_POST['mois'])){
+            if( isset($_POST['mois'])){
+           $mois=$_POST['mois']; 
+            }
+            else{
+           $mois=$_POST['lstMois'];
+            }
             $lesVisiteurs=$pdo->getLesVisiteurs($mois);
                $lesCles= array_keys($lesVisiteurs);
                $idASelectionner=$lesCles[0];
@@ -27,8 +32,22 @@ switch($action){
         
             
         }
-       if(isset($_POST['$lstVisiteurs'])){
-           
+        
+       if(isset($_POST["lstVisiteur"])){
+          $idVisiteur=$_POST["lstVisiteur"];
+           $leMois=$_POST['mois'];
+		
+		$lesFraisHorsForfait = $pdo->getLesFraisHorsForfait($idVisiteur,$leMois);
+		$lesFraisForfait= $pdo->getLesFraisForfait($idVisiteur,$leMois);
+		$lesInfosFicheFrais = $pdo->getLesInfosFicheFrais($idVisiteur,$leMois);
+		$numAnnee =substr( $leMois,0,4);
+		$numMois =substr( $leMois,4,2);
+		$libEtat = $lesInfosFicheFrais['libetat'];
+		$montantValide = $lesInfosFicheFrais['montantvalide'];
+		$nbJustificatifs = $lesInfosFicheFrais['nbjustificatifs'];
+		$dateModif =  $lesInfosFicheFrais['datemodif'];
+		$dateModif =  dateAnglaisVersFrancais($dateModif);
+                 include("vues/v_listeEtatFrais2.php");
                 } 
        
                 
@@ -36,21 +55,7 @@ switch($action){
         }
 
     case "infoFiche":
-        $idVisiteur=$_POST['lstVisiteur'];
-           $leMois=$_POST['mois'];
-           echo $leMois.$idVisiteur;
-		
-		$lesFraisHorsForfait = $pdo->getLesFraisHorsForfait($idVisiteur,$leMois);
-		$lesFraisForfait= $pdo->getLesFraisForfait($idVisiteur,$leMois);
-		$lesInfosFicheFrais = $pdo->getLesInfosFicheFrais($idVisiteur,$leMois);
-		$numAnnee =substr( $leMois,0,4);
-		$numMois =substr( $leMois,4,2);
-		$libEtat = $lesInfosFicheFrais['libEtat'];
-		$montantValide = $lesInfosFicheFrais['montantValide'];
-		$nbJustificatifs = $lesInfosFicheFrais['nbJustificatifs'];
-		$dateModif =  $lesInfosFicheFrais['dateModif'];
-		$dateModif =  dateAnglaisVersFrancais($dateModif);
-      include("vues/v_listeEtatFrais2.php");
+        
         
     break;
         

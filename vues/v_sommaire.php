@@ -36,7 +36,7 @@
       else { ?>
            
            <li class="smenu">
-              <a href="index.php?uc=validerFrais&action=saisirFrais" title="Valider fiche de frais ">Valider fiche de frais</a>
+              <a href="index.php?uc=validerFrais&action=validerInfo" title="Valider fiche de frais ">Valider fiche de frais</a>
            </li>
            <li class="smenu">
               <a href="index.php?uc=suivreFrais&action=validerMois" title="Suivre paiement des fiches de frais">Suivre paiement des fiches de frais</a>

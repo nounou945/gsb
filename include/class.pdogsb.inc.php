@@ -17,9 +17,9 @@
 
 class PdoGsb{   		
       	private static $serveur='mysql:host=localhost';
-      	private static $bdd='dbname= nchettoui';   		
-      	private static $user='nchettoui' ;    		
-      	private static $mdp='choht5Ub' ;	
+      	private static $bdd='dbname= sjeanphilippe';   		
+      	private static $user='sjeanphilippe' ;    		
+      	private static $mdp='eweeNg9e' ;	
 		private static $monPdo;
 		private static $monPdoGsb=null;
 /**
@@ -326,7 +326,7 @@ class PdoGsb{
 fichefrais.montantValide as montantvalide, etat.libelle as libetat from  fichefrais inner join etat on fichefrais.idetat = etat.id 
 where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois ='$mois'";
 		$res = PdoGsb::$monPdo->query($req);
-		$laLigne = $res->fetch();
+                $laLigne = $res->fetch();
 		return $laLigne;
 	}
 /**
@@ -338,9 +338,26 @@ where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois ='$mois'";
  */
  
 	public function majEtatFicheFrais($idVisiteur,$mois,$etat){
-		$req = "update ficheFrais set idEtat = '$etat', dateModif = now() 
+		$req = "update fichefrais set idetat = '$etat', datemodif = now() 
 		where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois = '$mois'";
 		PdoGsb::$monPdo->exec($req);
 	}
+        public function getAllVisiteurs(){
+                $req ="select id,nom,prenom from visiteur where comptable=0";
+                $res = PdoGsb::$monPdo->query($req);
+                 $laLigne = $res->fetch();
+                 while($laLigne != null)	{
+			$selection = $laLigne['id'];
+                        $nom=$laLigne['nom'];
+                        $prenom=$laLigne['prenom'];
+			$lesVisiteurs["$selection"]=array(
+                            "id"=>"$selection",
+		     "nom"=>"$nom",
+                            "prenom"=>"$prenom"
+             );
+			$laLigne = $res->fetch(); 		
+		}
+		return $lesVisiteurs;
+        }
 }
 ?>

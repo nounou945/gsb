@@ -1,6 +1,6 @@
       
        <h3>visiteurs  à sélectionner : </h3>
-      <form action="index.php?uc=suivreFrais&action=infoFiche" method="post">
+      <form action="index.php?uc=suivreFrais&action=validerMois" method="post">
       <div class="corpsForm">
          
       <p>
@@ -33,11 +33,14 @@
       </p>
       </div>
       <div class="piedForm">
+          <?php if(empty($_POST['lstVisiteur'] )){?>
       <p>
+          
           <input type="hidden" name="mois" value="<?php echo $mois ?>" />
         <input id="ok" type="submit" value="Valider" size="20" />
         <input id="annuler" type="reset" value="Effacer" size="20" />
       </p> 
+      <?php } ?>
       </div>
         
       </form>
