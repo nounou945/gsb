@@ -23,20 +23,13 @@ switch($action){
             $lesVisiteurs=$pdo->getLesVisiteurs($mois);
                $lesCles= array_keys($lesVisiteurs);
                $idASelectionner=$lesCles[0];
+               var_dump($lesCles);
             include("vues/v_validerVisiteur.php");
         
             
         }
-       if(isset($_POST['$lstVisiteurs'])){
-           
-                } 
-       
-                
- break ;  
-        }
-
-    case "infoFiche":
-        $idVisiteur=$_POST['lstVisiteur'];
+       if(isset($_POST["lstVisiteur"])){
+                $idVisiteur=$_POST['lstVisiteur'];
            $leMois=$_POST['mois'];
            echo $leMois.$idVisiteur;
 		
@@ -45,13 +38,21 @@ switch($action){
 		$lesInfosFicheFrais = $pdo->getLesInfosFicheFrais($idVisiteur,$leMois);
 		$numAnnee =substr( $leMois,0,4);
 		$numMois =substr( $leMois,4,2);
-		$libEtat = $lesInfosFicheFrais['libEtat'];
-		$montantValide = $lesInfosFicheFrais['montantValide'];
-		$nbJustificatifs = $lesInfosFicheFrais['nbJustificatifs'];
-		$dateModif =  $lesInfosFicheFrais['dateModif'];
+		$libEtat = $lesInfosFicheFrais['libetat'];
+		$montantValide = $lesInfosFicheFrais['montantvalide'];
+		$nbJustificatifs = $lesInfosFicheFrais['nbjustificatifs'];
+		$dateModif =  $lesInfosFicheFrais['datemodif'];
 		$dateModif =  dateAnglaisVersFrancais($dateModif);
-      include("vues/v_listeEtatFrais2.php");
+      include("vues/v_detailFrais.php");
         
+                } 
+       
+                
+ break ;  
+        }
+
+    case "infoFiche":
+   
     break;
         
     }

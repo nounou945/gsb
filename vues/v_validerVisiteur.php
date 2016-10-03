@@ -1,6 +1,6 @@
       
        <h3>visiteurs  à sélectionner : </h3>
-      <form action="index.php?uc=suivreFrais&action=infoFiche" method="post">
+      <form action="index.php?uc=suivreFrais&action=validerMois" method="post">
       <div class="corpsForm">
          
       <p>
@@ -17,7 +17,7 @@
 				$prenom =  $unVisiteur['prenom'];
 				if($id == $idASelectionner){
 				?>
-				<option selected value="<?php echo $id?>"><?php echo  $nom.$prenom ?> </option>
+				<option selected value="<?php echo $id?>"><?php echo  $nom." ".$prenom ?> </option>
 				<?php 
 				}
 				else{ ?>
