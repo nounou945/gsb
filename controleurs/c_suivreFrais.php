@@ -28,14 +28,15 @@ switch($action){
             $lesVisiteurs=$pdo->getLesVisiteurs($mois);
                $lesCles= array_keys($lesVisiteurs);
                $idASelectionner=$lesCles[0];
+       
             include("vues/v_validerVisiteur.php");
         
             
         }
-        
        if(isset($_POST["lstVisiteur"])){
-          $idVisiteur=$_POST["lstVisiteur"];
+                $idVisiteur=$_POST['lstVisiteur'];
            $leMois=$_POST['mois'];
+           
 		
 		$lesFraisHorsForfait = $pdo->getLesFraisHorsForfait($idVisiteur,$leMois);
 		$lesFraisForfait= $pdo->getLesFraisForfait($idVisiteur,$leMois);
@@ -47,7 +48,8 @@ switch($action){
 		$nbJustificatifs = $lesInfosFicheFrais['nbjustificatifs'];
 		$dateModif =  $lesInfosFicheFrais['datemodif'];
 		$dateModif =  dateAnglaisVersFrancais($dateModif);
-                 include("vues/v_listeEtatFrais2.php");
+      include("vues/v_detailFrais.php");
+        
                 } 
        
                 
@@ -55,8 +57,7 @@ switch($action){
         }
 
     case "infoFiche":
-        
-        
+   
     break;
         
     }

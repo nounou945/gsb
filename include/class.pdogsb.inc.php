@@ -294,9 +294,15 @@ class PdoGsb{
 		}
 		return $lesMois;
 	}
+        
+        /**
+         * retourne les visiteurs en fonction du mois selectionné
+         * @param type $mois
+         * @return type
+         */
         public function getLesVisiteurs($mois){
 		$req = "select visiteur.id,visiteur.nom,visiteur.prenom from visiteur where visiteur.id in "
-                        . "(select fichefrais.idvisiteur from fichefrais where fichefrais.mois='$mois' and fichefrais.idetat='va') 
+                        . "(select fichefrais.idvisiteur from fichefrais where fichefrais.mois='$mois' and fichefrais.idetat='cr') 
 		order by nom desc ";
 		$res = PdoGsb::$monPdo->query($req);
 		$lesVisiteurs =array();
@@ -306,8 +312,8 @@ class PdoGsb{
                         $nom=$laLigne['nom'];
                         $prenom=$laLigne['prenom'];
 			$lesVisiteurs["$selection"]=array(
-                            "id"=>"$selection",
-		     "nom"=>"$nom",
+                        "id"=>"$selection",
+                        "nom"=>"$nom",
                             "prenom"=>"$prenom"
              );
 			$laLigne = $res->fetch(); 		
@@ -342,22 +348,33 @@ where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois ='$mois'";
 		where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois = '$mois'";
 		PdoGsb::$monPdo->exec($req);
 	}
-        public function getAllVisiteurs(){
-                $req ="select id,nom,prenom from visiteur where comptable=0";
-                $res = PdoGsb::$monPdo->query($req);
-                 $laLigne = $res->fetch();
-                 while($laLigne != null)	{
+      public function getAllVisiteurs(){
+		$req ="select * from visiteur where comptable=0";
+		
+		$res = PdoGsb::$monPdo->query($req);
+		$lesVisiteurs =array();
+		$laLigne = $res->fetch();
+		while($laLigne != null)	{
 			$selection = $laLigne['id'];
                         $nom=$laLigne['nom'];
                         $prenom=$laLigne['prenom'];
 			$lesVisiteurs["$selection"]=array(
                             "id"=>"$selection",
-		     "nom"=>"$nom",
+                            "nom"=>"$nom",
                             "prenom"=>"$prenom"
              );
 			$laLigne = $res->fetch(); 		
 		}
 		return $lesVisiteurs;
+	}
+        
+        public function reporterFraisHorsForfait($idFrais){
+		$req = "update lignefraishorsforfait set mois=mois+1 where id='$idFrais'";
+		PdoGsb::$monPdo->exec($req);
+	}
+        
         }
-}
+
+
+
 ?>

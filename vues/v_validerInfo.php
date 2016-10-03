@@ -1,7 +1,7 @@
 ﻿ <div id="contenu">
       <h2>fiches de frais � valider</h2>
       <h3>Mois à sélectionner : </h3>
-      <form action="index.php?uc=validerFrais&action=validerInfo" method="post">
+      <form action="index.php?uc=validerFrais&action=consulterFicheDetail" method="post">
       <div class="corpsForm">
          
       <p>
@@ -11,7 +11,7 @@
             <?php
 			foreach ($lesMois as $unMois)
 			{
-			    $mois = $unMois['mois'];
+                                $mois = $unMois['mois'];
 				$numAnnee =  $unMois['numAnnee'];
 				$numMois =  $unMois['numMois'];
 				if($mois == $moisASelectionner){
@@ -36,12 +36,12 @@
             <?php
 			foreach ($lesVisiteurs as $unVisiteur)
 			{
-			    $id = $unVisiteur['id'];
+                                 $id = $unVisiteur['id'];
 				$nom =  $unVisiteur['nom'];
 				$prenom =  $unVisiteur['prenom'];
 				if($id == $idASelectionner){
 				?>
-				<option selected value="<?php echo $id?>"><?php echo  $nom.$prenom ?> </option>
+				<option selected value="<?php echo $id?>"><?php echo  $nom." ".$prenom ?> </option>
 				<?php 
 				}
 				else{ ?>
@@ -52,18 +52,22 @@
 			}
            
 		   ?>    
-            
         </select>
       </p>
       </div>
       <div class="piedForm">
-          
+          <?php if(empty($_POST['lstMois'])){?>
       <p>
         <input id="ok" type="submit" value="Valider" size="20" />
         <input id="annuler" type="reset" value="Effacer" size="20" />
       </p> 
-          
+          <?php } ?>
       </div>
         
       </form><?php
 
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
