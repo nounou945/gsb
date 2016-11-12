@@ -42,7 +42,8 @@ switch($action){
 		$lesFraisForfait= $pdo->getLesFraisForfait($idVisiteur,$leMois);
 		$lesInfosFicheFrais = $pdo->getLesInfosFicheFrais($idVisiteur,$leMois);
 		$numAnnee =substr( $leMois,0,4);
-		$numMois =substr( $leMois,4,2);
+		$numMois =substr( $leMois,5,2);
+                
 		$libEtat = $lesInfosFicheFrais['libetat'];
 		$montantValide = $lesInfosFicheFrais['montantvalide'];
 		$nbJustificatifs = $lesInfosFicheFrais['nbjustificatifs'];
@@ -56,8 +57,12 @@ switch($action){
  break ;  
         }
 
-    case "infoFiche":
-   
+    case "reporter":
+    $pdo->reporterFraisHorsForfait($request['reporter']);
+    break;
+    
+    case"refuser":
+     $pdo->refuFraisHorsForfait($request['refu']);
     break;
         
     }

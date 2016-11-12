@@ -107,7 +107,7 @@ class PdoGsb{
 */
 	public function getLesFraisForfait($idVisiteur, $mois){
 		$req = "select fraisforfait.id as idfrais, fraisforfait.libelle as libelle, 
-		lignefraisforfait.quantite as quantite from lignefraisforfait inner join fraisforfait 
+		lignefraisforfait.quantite as quantite,lignefraisforfait.idfraisforfait as fraisforfait from lignefraisforfait inner join fraisforfait 
 		on fraisforfait.id = lignefraisforfait.idfraisforfait
 		where lignefraisforfait.idvisiteur ='$idVisiteur' and lignefraisforfait.mois='$mois' 
 		order by lignefraisforfait.idfraisforfait";	
@@ -259,7 +259,7 @@ class PdoGsb{
 		while($laLigne != null)	{
 			$mois = $laLigne['mois'];
 			$numAnnee =substr( $mois,0,4);
-			$numMois =substr( $mois,4,2);
+			$numMois =substr( $mois,5,2);
 			$lesMois["$mois"]=array(
 		     "mois"=>"$mois",
 		    "numAnnee"  => "$numAnnee",
@@ -274,9 +274,13 @@ class PdoGsb{
          * retourne les mois disponibles selon les comptables qui on des fiches de  ?alider.
          * @return type
          */
-        public function getLesMoisDisponibles2(){
+        /**
+         * retourne les mois ou les visiteurs ont des fiches de frais à l'etat cr
+         * @return type
+         */
+        public function getLesMoisDisponibles2(){ 
 		$req = "select fichefrais.mois as mois from  fichefrais where fichefrais.idvisiteur in(select id from visiteur where comptable=0)
-                    and idetat='va'
+                    and idetat='cl'
 		order by fichefrais.mois desc ";
 		$res = PdoGsb::$monPdo->query($req);
 		$lesMois =array();
@@ -284,7 +288,7 @@ class PdoGsb{
 		while($laLigne != null)	{
 			$mois = $laLigne['mois'];
 			$numAnnee =substr( $mois,0,4);
-			$numMois =substr( $mois,4,2);
+			$numMois =substr( $mois,5,2);
 			$lesMois["$mois"]=array(
 		     "mois"=>"$mois",
 		    "numAnnee"  => "$numAnnee",
@@ -294,15 +298,14 @@ class PdoGsb{
 		}
 		return $lesMois;
 	}
-        
         /**
-         * retourne les visiteurs en fonction du mois selectionné
+         * retourne la liste des visiteurs qui ont des fiches de frais pour le mois selectioné
          * @param type $mois
          * @return type
          */
         public function getLesVisiteurs($mois){
 		$req = "select visiteur.id,visiteur.nom,visiteur.prenom from visiteur where visiteur.id in "
-                        . "(select fichefrais.idvisiteur from fichefrais where fichefrais.mois='$mois' and fichefrais.idetat='cr') 
+                        . "(select fichefrais.idvisiteur from fichefrais where fichefrais.mois='$mois' and fichefrais.idetat='cl') 
 		order by nom desc ";
 		$res = PdoGsb::$monPdo->query($req);
 		$lesVisiteurs =array();
@@ -314,7 +317,7 @@ class PdoGsb{
 			$lesVisiteurs["$selection"]=array(
                         "id"=>"$selection",
                         "nom"=>"$nom",
-                            "prenom"=>"$prenom"
+                         "prenom"=>"$prenom"
              );
 			$laLigne = $res->fetch(); 		
 		}
@@ -348,7 +351,11 @@ where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois ='$mois'";
 		where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois = '$mois'";
 		PdoGsb::$monPdo->exec($req);
 	}
-      public function getAllVisiteurs(){
+      /**
+       * permet d'avoir la liste de tous les visiteurs 
+       * @return type
+       */
+        public function getAllVisiteurs(){
 		$req ="select * from visiteur where comptable=0";
 		
 		$res = PdoGsb::$monPdo->query($req);
@@ -367,13 +374,74 @@ where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois ='$mois'";
 		}
 		return $lesVisiteurs;
 	}
+        /**
+         * permet de reporter les frais hors forfait 
+         * @param type $idFrais
+         */
+      //public function getAllVisiteurs(){
+		//$req ="select * from visiteur where comptable=0";
+		
+		//$res = PdoGsb::$monPdo->query($req);
+		//$lesVisiteurs =array();
+		//$laLigne = $res->fetch();
+		//while($laLigne != null)	{
+			//$selection = $laLigne['id'];
+                        //$nom=$laLigne['nom'];
+                        //$prenom=$laLigne['prenom'];
+			//$lesVisiteurs["$selection"]=array(
+                           // "id"=>"$selection",
+                           // "nom"=>"$nom",
+                         //  "prenom"=>"$prenom"
+             //);
+		//	$laLigne = $res->fetch(); 		
+		//}
+		//return $lesVisiteurs;
+	//}
         
         public function reporterFraisHorsForfait($idFrais){
-		$req = "update lignefraishorsforfait set mois=mois+1 where id='$idFrais'";
-		PdoGsb::$monPdo->exec($req);
+		$mois = "select mois from lignefraishorsforfait where id='$idFrais'";
+		PdoGsb::$monPdo->exec($date);
+                $leMois=  substr($date,0,4);
+                $annee=  substr($string,5,2);
+                if(leMois<12){
+                    $leMois+=1;
+                }
+                else{
+                    $annee+=1;
+                }
+                $mois2=$leMois+"/"+$annee;
+                $req=("update  lignefraishorsforfait set mois='$mois2' where id='$idFrais'");
+                PdoGsb::$monPdo->exec($req);
 	}
-        
+        public function refuFraisHorsForfait($idFrais){
+            $refu=("select refus from lignefraishorsforfait where id='$idFrais'");
+            PdoGsb::$monPdo->query($refu);
+            $libelle=("select refus from lignefraishorsforfait where id='$idFrais'");
+            PdoGsb::$monPdo->query($refu);
+            if(refus==0){
+                $req=("update lignefraishorsforfait set refus=1  where id='$idFrais'");
+                PdoGsb::$monPdo->exec($refu);
+            }
+            
+            
         }
+        public function estRefuse($idHF){
+            $req=("select refu from lignefraishorsforfait where id='$idHF'");
+            $refu=PdoGsb::$monPdo->query($req);
+                if($refu==1){
+                    return true;
+                }
+            return false;
+        }
+       public function valeurTF($unType){
+           $req=("select montant from fraisforfait where id='$unType'");
+           $res=PdoGsb::$monPdo->query($req);
+           $montant=$res->fetch();
+           return $montant;
+       }
+        
+      }
+        
 
 
 

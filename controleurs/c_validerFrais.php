@@ -29,7 +29,7 @@ switch($action){
 		$lesFraisForfait= $pdo->getLesFraisForfait($idVisiteur,$leMois);
 		$lesInfosFicheFrais = $pdo->getLesInfosFicheFrais($idVisiteur,$leMois);
 		$numAnnee =substr( $leMois,0,4);
-		$numMois =substr( $leMois,4,2);
+		$numMois =substr( $leMois,5,6);
 		$libEtat = $lesInfosFicheFrais['libetat'];
 		$montantValide = $lesInfosFicheFrais['montantvalide'];
 		$nbJustificatifs = $lesInfosFicheFrais['nbjustificatifs'];
