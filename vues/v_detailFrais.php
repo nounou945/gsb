@@ -28,7 +28,7 @@
                                 $idF=$unFraisForfait['fraisforfait'];
                                 $ratio=$pdo->valeurTF($idF);
                                 var_dump($ratio);
-                                $montantTotal+=$quantite*$ratio;
+                                
                                 
 		?>
                 <td class="qteForfait"><?php echo $quantite?> </td>
