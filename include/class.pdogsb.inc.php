@@ -414,20 +414,23 @@ where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois = '$mois'");
                 PdoGsb::$monPdo->exec($req);
 	}
         public function refuFraisHorsForfait($idFrais){
-            $refu=("select refus from lignefraishorsforfait where id='$idFrais'");
-            PdoGsb::$monPdo->query($refu);
-            $libelle=("select refus from lignefraishorsforfait where id='$idFrais'");
-            PdoGsb::$monPdo->query($refu);
-            if(refus==0){
-                $req=("update lignefraishorsforfait set refus=1  where id='$idFrais'");
-                PdoGsb::$monPdo->exec($refu);
+            $req=("select refus from lignefraishorsforfait where id='$idFrais'");
+            $res=PdoGsb::$monPdo->query($req);
+            $laLigne=$res->fetch();
+            $refu=(int)($laLigne["refus"]);
+            var_dump($refu);
+            if($refu==0){
+                $req2=("update lignefraishorsforfait set refus=1  where id='$idFrais'");
+                PdoGsb::$monPdo->exec($req2);
             }
             
             
         }
         public function estRefuse($idHF){
-            $req=("select refu from lignefraishorsforfait where id='$idHF'");
-            $refu=PdoGsb::$monPdo->query($req);
+            $req=("select refus from lignefraishorsforfait where id='$idHF'");
+            $res=PdoGsb::$monPdo->query($req);
+            $laLigne=$res->fetch();
+            $refu=(int)($laLigne["refus"]);
                 if($refu==1){
                     return true;
                 }
@@ -440,9 +443,10 @@ where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois = '$mois'");
            return $montant;
        }
         public function getLesFiches(){
-          $req=("select * from fichefrais ");
+          $req=("select * from fichefrais where idetat='va' ");
           $res=PdoGsb::$monPdo->query($req);
           $laLigne=$res->fetch();
+          $lesFiches=null;
           while($laLigne != null)	{
 			$idVisiteur = $laLigne['idvisiteur'];
                         $mois=$laLigne['mois'];
@@ -477,7 +481,10 @@ where idvisiteur='$idVisiteur' and mois='$mois'");
             $total=$laLigne['totalHF'];
             return $total;
         }
-        
+        function rbAll(){
+            $req=("update fichefrais set idetat='rb' where idetat='va'");
+            PdoGsb::$monPdo->query($req);
+        }
         
     }
       

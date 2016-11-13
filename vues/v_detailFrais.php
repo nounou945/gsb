@@ -1,14 +1,14 @@
 
 <h3>Fiche de frais du mois <?php echo $numMois."-".$numAnnee?> : 
     </h3>
-<form method="POST" action="index.php?uc=suivreFrais&action=validerMois">
+<form method="POST" action="index.php?uc=suivreFrais&action=validerFiche">
         <input type="hidden" name="moisVA" value="<?php echo $leMois?>">
         <input type="hidden" name ="idVisiteurVA" value="<?php echo $idVisiteur?>">
         <input type="submit" value="valider">
 </form>    
     <div class="encadre">
     <p>
-        Etat : <?php echo $libEtat?> depuis le <?php echo $dateModif?> <br> Montant totale : <?php echo $montantTotal?>
+        Etat : <?php echo $libEtat?> depuis le <?php echo $dateModif?> <br> Montant totale : <?php echo $total?>
     
                      
     </p>
@@ -52,18 +52,18 @@
 			$date = $unFraisHorsForfait['date'];
 			$libelle = $unFraisHorsForfait['libelle'];
                         if($pdo->estRefuse($idHF)){
-                            $libelle="REFUSE:"+$libelle;
+                            $libelle=$libelle.":refuse";
                         }
 			$montant = $unFraisHorsForfait['montant'];
-                        $montantTotal+=$montant;
+                        
 		
                         ?>
              <tr>
                 <td><?php echo $date ?></td>
                 <td><?php echo $libelle ?></td>
                 <td><?php echo $montant ?></td>
-                <td><a href="<?php reporter($idHF) ?>">reporter</a></td>
-                <td><a href="<?php refu($idHF) ?>">refuser</a></td>
+                <td><a href="index.php?uc=suivreFrais&action=validerMois&idRP=<?php echo $idHF ?>">reporter</a></td>
+                <td><a href="index.php?uc=suivreFrais&action=validerMois&idRF=<?php echo $idHF ?>">refuser</a></td>
              </tr>
         <?php 
           }

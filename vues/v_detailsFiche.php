@@ -3,7 +3,7 @@
     </h3>   
     <div class="encadre">
     <p>
-        Etat : <?php echo $libEtat?> depuis le <?php echo $dateModif?> <br> Montant totale : <?php echo $montantTotal?>
+        Etat : <?php echo $libEtat?> depuis le <?php echo $dateModif?> <br> Montant totale : <?php echo $total ?>
     
                      
     </p>

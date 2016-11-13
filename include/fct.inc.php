@@ -201,7 +201,7 @@ function nbErreurs(){
 	}
 }
 function details($idVisiteur,$mois){
-    echo"index.php?uc=voirLesFiches&action=details";
+    echo"index.php?uc=voirLesFiches&action=details?id=$idVisiteur?mois=$mois";
     $_SESSION['id']=$idVisiteur;
     $_SESSION['mois']=$mois;
 }
@@ -219,10 +219,7 @@ function reporter($idHF){
     $_SESSION['reporter']=$idHF;
 }
 
-function total($idVisiteur,$mois){
-    $total=($pdo->totalHF($idVisiteur,$mois))+($pdo->totalF($idVisiteur,$mois));
-    return $total;     
- }
+
  function maintenant(){
      $ojd=date("Ymd");
      return $ojd;
