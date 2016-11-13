@@ -22,8 +22,8 @@ switch($uc){
         case 'suivreFrais' :{
 		include("controleurs/c_suivreFrais.php");break;//rajout
 	}
-	case 'validerFrais' :{
-		include("controleurs/c_validerFrais.php");break; //rajout
+	case 'voirLesFiches' :{
+		include("controleurs/c_voirLesFiches.php");break; //rajout
 	}
 }
 include("vues/v_pied.php") ;
