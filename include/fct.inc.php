@@ -200,4 +200,31 @@ function nbErreurs(){
 	   return count($_REQUEST['erreurs']);
 	}
 }
+function details($idVisiteur,$mois){
+    echo"index.php?uc=voirLesFiches&action=details";
+    $_SESSION['id']=$idVisiteur;
+    $_SESSION['mois']=$mois;
+}
+function remboursement($idVisiteur,$mois){
+    echo"index.php?uc=voirLesFiches&action=rembourse";
+    $_SESSION['id']=$idVisiteur;
+    $_SESSION['mois']=$mois;
+}
+function refu($idHF){
+    echo "index.php?uc=suivreFrais&action=validerMois";
+    $_SESSION['refu']=$idHF;
+}
+function reporter($idHF){
+    echo "index.php?uc=suivreFrais&action=validerMois";
+    $_SESSION['reporter']=$idHF;
+}
+
+function total($idVisiteur,$mois){
+    $total=($pdo->totalHF($idVisiteur,$mois))+($pdo->totalF($idVisiteur,$mois));
+    return $total;     
+ }
+ function maintenant(){
+     $ojd=date("Ymd");
+     return $ojd;
+ }
 ?>

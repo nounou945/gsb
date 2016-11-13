@@ -1,7 +1,7 @@
 <?php
 require_once("include/fct.inc.php");
 require_once ("include/class.pdogsb.inc.php");
-require('fpdf/fpdf.php');
+//require('fpdf/fpdf.php');
 include("vues/v_entete.php") ;
 session_start();
 $pdo = PdoGsb::getPdoGsb();
@@ -23,8 +23,8 @@ switch($uc){
         case 'suivreFrais' :{
 		include("controleurs/c_suivreFrais.php");break;//rajout
 	}
-	case 'validerFrais' :{
-		include("controleurs/c_validerFrais.php");break; //rajout
+	case 'voirLesFiches' :{
+		include("controleurs/c_voirLesFiches.php");break; //rajout
 	}
 }
 include("vues/v_pied.php") ;

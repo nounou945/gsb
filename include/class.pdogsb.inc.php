@@ -347,8 +347,8 @@ where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois ='$mois'";
  */
  
 	public function majEtatFicheFrais($idVisiteur,$mois,$etat){
-		$req = "update fichefrais set idetat = '$etat', datemodif = now() 
-		where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois = '$mois'";
+		$req =("update fichefrais set idetat ='$etat', datemodif = now() 
+where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois = '$mois'");
 		PdoGsb::$monPdo->exec($req);
 	}
       /**
@@ -439,9 +439,55 @@ where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois ='$mois'";
            $montant=$res->fetch();
            return $montant;
        }
+        public function getLesFiches(){
+          $req=("select * from fichefrais ");
+          $res=PdoGsb::$monPdo->query($req);
+          $laLigne=$res->fetch();
+          while($laLigne != null)	{
+			$idVisiteur = $laLigne['idvisiteur'];
+                        $mois=$laLigne['mois'];
+                        $nbJustificatifs=$laLigne['nbjustificatifs'];
+                        $dateModif=$laLigne['datemodif'];
+                        $idEtat=$laLigne['idetat'];
+                        
+			$lesFiches["$idVisiteur"]=array(
+                            "idVisiteur"=>"$idVisiteur",
+                            "mois"=>"$mois",
+                            "nbJustificatifs"=>"$nbJustificatifs",
+                            "dateModif"=>"$dateModif",
+                            "idEtat"=>"$idEtat"
+             );
+			$laLigne = $res->fetch(); 		
+		}
+		return $lesFiches;
+
+        }
+        function totalHF($idVisiteur,$mois){
+            $req=("select sum(montant)as totalF from lignefraishorsforfait where idvisiteur='$idVisiteur' and mois='$mois' and refus='0'");
+            $res=PdoGsb::$monPdo->query($req);
+            $laLigne=$res->fetch();
+            $total=$laLigne['totalF'];
+            return $total;
+        }
+        function totalF($idVisiteur,$mois){
+            $req=("select sum(quantite*montant) as totalHF from lignefraisforfait join fraisforfait on idfraisforfait=fraisforfait.id
+where idvisiteur='$idVisiteur' and mois='$mois'");
+            $res=PdoGsb::$monPdo->query($req);
+            $laLigne=$res->fetch();
+            $total=$laLigne['totalHF'];
+            return $total;
+        }
         
-      }
+        public function getInfosPdf($idVisiteur, $mois){ //rajout
+		$req = "select visiteur.id,visiteur.nom,visiteur.prenom from visiteur";
+		$res = PdoGsb::$monPdo->query($req);
+		$laLigne = $res->fetch();
+		return $laLigne;
+	}
         
+        
+    }
+      
 
 
 
