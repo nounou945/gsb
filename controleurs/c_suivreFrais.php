@@ -19,13 +19,13 @@ switch($action){
         include("vues/v_validerMois.php");
         
         if (isset($_POST['lstMois'])||isset($_POST['mois'])){
-            if( isset($_POST['mois'])){
-           $mois=$_POST['mois']; 
-            }
-            else{
-           $mois=$_POST['lstMois'];
-            }
-            $lesVisiteurs=$pdo->getLesVisiteurs($mois);
+                if( isset($_POST['mois'])){
+                    $mois=$_POST['mois']; 
+                }
+                else{
+                    $mois=$_POST['lstMois'];
+                }
+                $lesVisiteurs=$pdo->getLesVisiteurs($mois);
                $lesCles= array_keys($lesVisiteurs);
                $idASelectionner=$lesCles[0];
        
@@ -37,7 +37,10 @@ switch($action){
                 $idVisiteur=$_POST['lstVisiteur'];
            $leMois=$_POST['mois'];
            
-		
+		$totalHF=($pdo->totalHF($idVisiteur,$leMois));
+        $totalF=($pdo->totalF($idVisiteur,$leMois));
+        
+        $total=$totalF+$totalHF;
 		$lesFraisHorsForfait = $pdo->getLesFraisHorsForfait($idVisiteur,$leMois);
 		$lesFraisForfait= $pdo->getLesFraisForfait($idVisiteur,$leMois);
 		$lesInfosFicheFrais = $pdo->getLesInfosFicheFrais($idVisiteur,$leMois);
@@ -52,17 +55,25 @@ switch($action){
       include("vues/v_detailFrais.php");
         
                 } 
-       
+       if(isset($_REQUEST['idRP'])){
+           $idRP=(int)($_REQUEST['idRP']);
+           var_dump($idRP);
+           $pdo->reporterFraisHorsForfait($idRP);
+           echo "le frais HF choisi a ete reporte";
+       }
+        if(isset($_REQUEST['idRF'])){
+            $idRF=(int)($_REQUEST['idRF']);
+            var_dump($idRF);
+             $pdo->refuFraisHorsForfait($idRF);
+             echo "le frais HF choisi a ete refuse";
+        }
                 
  break ;  
         }
-
-    case "reporter":
-    $pdo->reporterFraisHorsForfait($request['reporter']);
-    break;
-    
-    case"refuser":
-     $pdo->refuFraisHorsForfait($request['refu']);
-    break;
+    case "validerFiche":
+        $mois=$_POST["moisVA"];
+        $idV=$_POST["idVisiteurVA"];
+        $va="va";
+        $pdo->majEtatFicheFrais($idV,$mois,$va);
         
     }

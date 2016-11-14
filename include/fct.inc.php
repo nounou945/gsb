@@ -200,31 +200,43 @@ function nbErreurs(){
 	   return count($_REQUEST['erreurs']);
 	}
 }
-function details($idVisiteur,$mois){
-    echo"index.php?uc=voirLesFiches&action=details";
-    $_SESSION['id']=$idVisiteur;
-    $_SESSION['mois']=$mois;
-}
-function remboursement($idVisiteur,$mois){
-    echo"index.php?uc=voirLesFiches&action=rembourse";
-    $_SESSION['id']=$idVisiteur;
-    $_SESSION['mois']=$mois;
-}
-function refu($idHF){
-    echo "index.php?uc=suivreFrais&action=validerMois";
-    $_SESSION['refu']=$idHF;
-}
-function reporter($idHF){
-    echo "index.php?uc=suivreFrais&action=validerMois";
-    $_SESSION['reporter']=$idHF;
-}
 
-function total($idVisiteur,$mois){
-    $total=($pdo->totalHF($idVisiteur,$mois))+($pdo->totalF($idVisiteur,$mois));
-    return $total;     
- }
- function maintenant(){
-     $ojd=date("Ymd");
-     return $ojd;
- }
+
+/**
+ * 
+ * @param type $lesFraisFortfaits
+ * @param type $lesFraisHorsForfaits
+ * @param type $idVisiteur
+ * @param type $mois
+ * @param type $visiteur
+ * creer le pdf et recupere les infos du pdf
+ */
+
+function creerPdf($lesFraisFortfaits,$lesFraisHorsForfaits,$idVisiteur,$mois,$visiteur){ //rajout   
+// permet d'inclure la bibliothèque fpdf
+require('fpdf/fpdf.php');
+$header=array('Frais Forfaitaires','Quantité','Montant Unitaire','Total');
+$header2=array('Date','Libelle','Montant');
+
+// instancie un objet de type FPDF qui permet de créer le PDF
+$pdf=new FPDF();
+// ajoute une page
+$pdf->AddPage();
+// définit la police courante
+$pdf->SetFont('arial','B',12);
+// affiche du texte
+$pdf->Image ("images/logo.jpg",120,10,80,48);
+$pdf->Ln();
+$pdf->Cell(35,10,'Visiteur',0,1);
+//$pdf->Cell(35,10,'Nom',0,1);
+$pdf->Cell(40,10,"Nom :" .$visiteur['nom'],0);
+$pdf->Cell(30,10, $visiteur['prenom'],0,1);
+$pdf->Cell(30,10,"Le mois:" .$mois,0,1);
+$pdf->BasicTable($header,$lesFraisFortfaits);
+$pdf->Ln();
+$pdf->BasicTable($header2,$lesFraisHorsForfaits);
+
+ob_end_clean(); //bloque les affichages après cette methode
+// Enfin, le document est terminé et envoyé au navigateur grâce à Output().
+$pdf->Output();}
 ?>

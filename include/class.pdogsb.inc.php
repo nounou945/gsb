@@ -397,7 +397,11 @@ where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois = '$mois'");
 		//}
 		//return $lesVisiteurs;
 	//}
-        
+        /**
+         * 
+         * @param type $idFrais
+         * reportent les frais hors forfaits
+         */
         public function reporterFraisHorsForfait($idFrais){
 		$mois = "select mois from lignefraishorsforfait where id='$idFrais'";
 		PdoGsb::$monPdo->exec($date);
@@ -413,36 +417,63 @@ where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois = '$mois'");
                 $req=("update  lignefraishorsforfait set mois='$mois2' where id='$idFrais'");
                 PdoGsb::$monPdo->exec($req);
 	}
+        /**
+         * 
+         * @param type $idFrais
+         * refusent les frais hors forfaits
+         */
         public function refuFraisHorsForfait($idFrais){
-            $refu=("select refus from lignefraishorsforfait where id='$idFrais'");
-            PdoGsb::$monPdo->query($refu);
-            $libelle=("select refus from lignefraishorsforfait where id='$idFrais'");
-            PdoGsb::$monPdo->query($refu);
-            if(refus==0){
-                $req=("update lignefraishorsforfait set refus=1  where id='$idFrais'");
-                PdoGsb::$monPdo->exec($refu);
+            $req=("select refus from lignefraishorsforfait where id='$idFrais'");
+            $res=PdoGsb::$monPdo->query($req);
+            $laLigne=$res->fetch();
+            $refu=(int)($laLigne["refus"]);
+            var_dump($refu);
+            if($refu==0){
+                $req2=("update lignefraishorsforfait set refus=1  where id='$idFrais'");
+                PdoGsb::$monPdo->exec($req2);
             }
             
             
         }
+        
+        /**
+         * 
+         * @param type $idHF
+         * @return boolean
+         * verifie si les frais hors  forfaits sont refusés ou pas
+         */
         public function estRefuse($idHF){
-            $req=("select refu from lignefraishorsforfait where id='$idHF'");
-            $refu=PdoGsb::$monPdo->query($req);
+            $req=("select refus from lignefraishorsforfait where id='$idHF'");
+            $res=PdoGsb::$monPdo->query($req);
+            $laLigne=$res->fetch();
+            $refu=(int)($laLigne["refus"]);
                 if($refu==1){
                     return true;
                 }
             return false;
         }
+        /**
+         * 
+         * @param type $unType
+         * @return type
+         * 
+         */
        public function valeurTF($unType){
            $req=("select montant from fraisforfait where id='$unType'");
            $res=PdoGsb::$monPdo->query($req);
            $montant=$res->fetch();
            return $montant;
        }
+       /**
+        * 
+        * @return type
+        * retournent les fiches validées
+        */
         public function getLesFiches(){
-          $req=("select * from fichefrais ");
+          $req=("select * from fichefrais where idetat='va' ");
           $res=PdoGsb::$monPdo->query($req);
           $laLigne=$res->fetch();
+          $lesFiches=null;
           while($laLigne != null)	{
 			$idVisiteur = $laLigne['idvisiteur'];
                         $mois=$laLigne['mois'];
@@ -462,6 +493,13 @@ where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois = '$mois'");
 		return $lesFiches;
 
         }
+        /**
+         * 
+         * @param type $idVisiteur
+         * @param type $mois
+         * @return type
+         * retourne le total des couts hors forfaits
+         */
         function totalHF($idVisiteur,$mois){
             $req=("select sum(montant)as totalF from lignefraishorsforfait where idvisiteur='$idVisiteur' and mois='$mois' and refus='0'");
             $res=PdoGsb::$monPdo->query($req);
@@ -469,6 +507,13 @@ where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois = '$mois'");
             $total=$laLigne['totalF'];
             return $total;
         }
+        /**
+         * 
+         * @param type $idVisiteur
+         * @param type $mois
+         * @return type
+         * total des couts forfaitaires
+         */
         function totalF($idVisiteur,$mois){
             $req=("select sum(quantite*montant) as totalHF from lignefraisforfait join fraisforfait on idfraisforfait=fraisforfait.id
 where idvisiteur='$idVisiteur' and mois='$mois'");
@@ -477,14 +522,26 @@ where idvisiteur='$idVisiteur' and mois='$mois'");
             $total=$laLigne['totalHF'];
             return $total;
         }
-        
-        public function getInfosPdf($idVisiteur, $mois){ //rajout
+        /**
+         * met a l'état b toutes les fiches de frais
+         */
+        function rbAll(){
+            $req=("update fichefrais set idetat='rb' where idetat='va'");
+            PdoGsb::$monPdo->query($req);
+        }
+        /**
+         * 
+         * @param type $idVisiteur
+         * @param type $mois
+         * @return type
+         * recupèrent les infos pour le pdf
+         */
+         public function getInfosPdf($idVisiteur, $mois){ //rajout
 		$req = "select visiteur.id,visiteur.nom,visiteur.prenom from visiteur";
 		$res = PdoGsb::$monPdo->query($req);
 		$laLigne = $res->fetch();
 		return $laLigne;
 	}
-        
         
     }
       

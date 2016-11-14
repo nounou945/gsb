@@ -8,8 +8,12 @@ switch($action){
         include("vues/v_voirLesFiches.php");
     break;
     case "details":
-        $idVisiteur=$_SESSION['id'];
-        $leMois=$_SESSION['mois'];
+        $idVisiteur=$_REQUEST['id'];
+        $leMois=$_REQUEST['mois'];
+        $totalHF=($pdo->totalHF($idVisiteur,$leMois));
+        $totalF=($pdo->totalF($idVisiteur,$leMois));
+        
+        $total=$totalF+$totalHF;
         $lesFraisHorsForfait = $pdo->getLesFraisHorsForfait($idVisiteur,$leMois);
         $lesFraisForfait= $pdo->getLesFraisForfait($idVisiteur,$leMois);
         $lesInfosFicheFrais = $pdo->getLesInfosFicheFrais($idVisiteur,$leMois);
@@ -24,15 +28,23 @@ switch($action){
         include("vues/v_detailsFiche.php");
     break;   
     case 'rembourse':
-        $idVisiteur=$_SESSION['id'];
-        $leMois=$_SESSION['mois'];
+        $idVisiteur=$_REQUEST['id'];
+        $leMois=$_REQUEST['mois'];
         $rb="rb";
         $pdo->majEtatFicheFrais($idVisiteur,$leMois,$rb);
-        echo "mise en paiement";
+        echo "mise en paiement effectuée";
     break;
-    case 'pdf':
-        $idVisiteur=$_SESSIOON['id']; //rajout
-        $leMois=$_SESSION['mois']; //rajout 
+    case 'rbAll':
+        $pdo->rbAll();
+        echo"mise en payement effectue pour tout les visiteurs";
+    break;
+    case 'pdf': //rajout
+        $idVisiteur=$_REQUEST['id'];
+        $leMois=$_REQUEST['mois'];
+        $totalHF=($pdo->totalHF($idVisiteur,$leMois));
+        $totalF=($pdo->totalF($idVisiteur,$leMois));
+        
+        $total=$totalF+$totalHF;
         $lesFraisHorsForfait = $pdo->getLesFraisHorsForfait($idVisiteur,$leMois);
         $lesFraisForfait= $pdo->getLesFraisForfait($idVisiteur,$leMois);
         $lesInfosFicheFrais = $pdo->getLesInfosFicheFrais($idVisiteur,$leMois);
@@ -44,10 +56,15 @@ switch($action){
 	$nbJustificatifs = $lesInfosFicheFrais['nbjustificatifs'];
 	$dateModif =  $lesInfosFicheFrais['datemodif'];
 	$dateModif =  dateAnglaisVersFrancais($dateModif);
-        $pdo->creerPdf($lesFraisFortfaits,$lesFraisHorsForfaits,$visiteur,$mois); //rajout
-        include("vues/v_detailsFiche.php");
-        include("vues/v_pdf.php");
+        $visiteur=$pdo->getInfosPdf($idVisiteur, $leMois);
+        creerPdf($lesFraisForfait,$lesFraisHorsForfait,$idVisiteur,$leMois,$visiteur);
+       
+       
+        
         break;
-        } 
+        
+    }
+    
+        
     
 ?>
