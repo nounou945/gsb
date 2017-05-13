@@ -10,16 +10,16 @@
  * $monPdoGsb qui contiendra l'unique instance de la classe
  
  * @package default
- * @author Cheri Bibi
+ * @author Cheri Bibi²
  * @version    1.0
  * @link       http://www.php.net/manual/fr/book.pdo.php 
  */
 
 class PdoGsb{   		
       	private static $serveur='mysql:host=localhost';
-      	private static $bdd='dbname= nchettoui';   		
-      	private static $user='nchettoui' ;    		
-      	private static $mdp='choht5Ub' ;	
+      	private static $bdd='dbname= sjeanphilippe';   		
+      	private static $user='sjeanphilippe' ;    		
+      	private static $mdp='eweeNg9e' ;	
 		private static $monPdo;
 		private static $monPdoGsb=null;
 /**
@@ -204,7 +204,7 @@ class PdoGsb{
 	public function creeNouvellesLignesFrais($idVisiteur,$mois){
 		$dernierMois = $this->dernierMoisSaisi($idVisiteur);
 		$laDerniereFiche = $this->getLesInfosFicheFrais($idVisiteur,$dernierMois);
-		if($laDerniereFiche['idEtat']=='CR'){
+		if($laDerniereFiche['idetat']=='CR'){
 				$this->majEtatFicheFrais($idVisiteur, $dernierMois,'CL');
 				
 		}

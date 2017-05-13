@@ -1,9 +1,9 @@
 <?php
 include("vues/v_sommaire.php");
 $idVisiteur = $_SESSION['idVisiteur'];
-$mois = getMois(date("d/m/Y"));
+$mois = date("Y/m");
 $numAnnee =substr( $mois,0,4);
-$numMois =substr( $mois,4,2);
+$numMois =substr( $mois,5,2);
 $action = $_REQUEST['action'];
 switch($action){
 	case 'saisirFrais':{

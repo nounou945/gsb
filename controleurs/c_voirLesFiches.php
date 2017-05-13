@@ -57,7 +57,7 @@ switch($action){
 	$dateModif =  $lesInfosFicheFrais['datemodif'];
 	$dateModif =  dateAnglaisVersFrancais($dateModif);
         $visiteur=$pdo->getInfosPdf($idVisiteur, $leMois);
-        creerPdf($lesFraisForfait,$lesFraisHorsForfait,$idVisiteur,$leMois,$visiteur);
+        creerPdf($lesFraisForfait,$lesFraisHorsForfait,$idVisiteur,$leMois,$visiteur,$nbJustificatifs,$pdo,$libEtat,$montantValide);
        
        
         

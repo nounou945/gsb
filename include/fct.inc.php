@@ -200,6 +200,19 @@ function nbErreurs(){
 	   return count($_REQUEST['erreurs']);
 	}
 }
+/**
+ * classe technique mpdf
+ */
+class M_pdf {
+ 
+    public $param;
+    public $pdf;
+    public function __construct($param = '"en-GB-x","A4","","",10,10,10,10,6,3')
+    {
+        $this->param =$param;
+        $this->pdf = new mPDF($this->param);
+    }
+}
 
 
 /**
@@ -209,34 +222,61 @@ function nbErreurs(){
  * @param type $idVisiteur
  * @param type $mois
  * @param type $visiteur
- * creer le pdf et recupere les infos du pdf
+ * @param type $nbJustificatifs
+ * @param type $pdo
+ * @param type $libEtat
+ * @param type $montantValide
  */
-
-function creerPdf($lesFraisFortfaits,$lesFraisHorsForfaits,$idVisiteur,$mois,$visiteur){ //rajout   
-// permet d'inclure la bibliothèque fpdf
-require('fpdf/fpdf.php');
-$header=array('Frais Forfaitaires','Quantité','Montant Unitaire','Total');
-$header2=array('Date','Libelle','Montant');
-
-// instancie un objet de type FPDF qui permet de créer le PDF
-$pdf=new FPDF();
-// ajoute une page
-$pdf->AddPage();
-// définit la police courante
-$pdf->SetFont('arial','B',12);
-// affiche du texte
-$pdf->Image ("images/logo.jpg",120,10,80,48);
-$pdf->Ln();
-$pdf->Cell(35,10,'Visiteur',0,1);
-//$pdf->Cell(35,10,'Nom',0,1);
-$pdf->Cell(40,10,"Nom :" .$visiteur['nom'],0);
-$pdf->Cell(30,10, $visiteur['prenom'],0,1);
-$pdf->Cell(30,10,"Le mois:" .$mois,0,1);
-$pdf->BasicTable($header,$lesFraisFortfaits);
-$pdf->Ln();
-$pdf->BasicTable($header2,$lesFraisHorsForfaits);
-
-ob_end_clean(); //bloque les affichages après cette methode
-// Enfin, le document est terminé et envoyé au navigateur grâce à Output().
-$pdf->Output();}
+function creerPdf($lesFraisFortfaits,$lesFraisHorsForfaits,$idVisiteur,$mois,$visiteur,$nbJustificatifs,$pdo,$libEtat,$montantValide){
+require_once('mpdf60/mpdf.php');
+$m_pdf= new M_pdf();
+$m_pdf->pdf->WriteHtml('<html>'
+        . '<div id="entete">
+        <img src="./images/logo.jpg" id="logoGSB" alt="Laboratoire Galaxy-Swiss Bourdin" title="Laboratoire Galaxy-Swiss Bourdin" />
+      </div>
+      <table style="text-align:center;"><tr><td style="font-size:30px;">Fiche de '.utf8_encode($visiteur['nom']).' '.utf8_encode($visiteur['prenom']).'</td><td style="font-size:30px;">en '.utf8_encode($mois).'</td></tr></table>'
+        . '</br></br></br></br></br>');
+if(isset($lesFraisFortfaits)){
+    $m_pdf->pdf->WriteHtml("<center><h3>descriptif des eléments forfaitaires</h3></center>"
+            . "<table style='width:100%;border-collapse:collapse;border:2px;font-size:24px;'><tr>");
+    foreach ( $lesFraisFortfaits as $unFraisForfait ){
+     $m_pdf->pdf->WriteHtml('<th style="font-size:24px;border:2px solid black;text-align:center;">'.  utf8_decode($unFraisForfait['libelle']).'</th>');   
+    }
+    $m_pdf->pdf->WriteHtml('</tr ><tr>');
+    foreach ( $lesFraisFortfaits as $unFraisForfait ){
+     $m_pdf->pdf->WriteHtml('<td style="font-size:24px;border:2px solid black;text-align:center;">'.utf8_encode($unFraisForfait['quantite']).'</td>');
+    }
+    $m_pdf->pdf->WriteHtml("</tr></table>");
+}
+/*if(isset($lesFraisHorsForfaits)){
+    $m_pdf->pdf->WriteHtml("<h3 style='alignement:center;'>Descriptif des éléments hors forfait - ".utf8_encode($nbJustificatifs)."justificatifs reçus-</h3>");
+    $m_pdf->pdf->WriteHtml('<table style="width:100%;display:inline-block;border-collapse:collapse;border:2px solid black;">'
+            . ' <tr style="border:2px solid black;" >
+                <th class="date" style="font-size:18px;border:2px solid black;">Date</th>
+                <th class="libelle" style="font-size:24px;border:2px solid black;">Libellé</th>
+                <th class="montant" style="font-size:24pxborder:2px solid black;;">Montant</th>                
+             </tr>');
+    foreach ( $lesFraisHorsForfaits as $unFraisHorsForfait ) 
+		  {
+        $m_pdf->pdf->WriteHtml('<tr style="border:2px solid black;">');
+        $m_pdf->pdf->WriteHtml('<td style="font-size:20px;">'.utf8_encode($unFraisHorsForfait["date"]).'</td>');
+        if($pdo->estRefuse($unFraisHorsForfait['id'])){
+            $m_pdf->pdf->WriteHtml('<td style="font-size:20px;border:2px solid black;text-align:center;">REFUSE:'.utf8_encode($unFraisHorsForfait['libelle']).'</td>');
+            
+        }
+        else{
+            $m_pdf->pdf->WriteHtml('<td style="font-size:20px;border:2px solid black;text-align:center;">'.utf8_encode($unFraisHorsForfait['libelle']).'</td>');
+        }
+        $m_pdf->pdf->WriteHtml('<td style="font-size:20px;border:2px solid black;text-align:center;">'.utf8_encode($unFraisHorsForfait["montant"]).'</td></tr>');
+    }
+    $m_pdf->pdf->WriteHtml('</table>');
+    $m_pdf->pdf->WriteHtml('<h3>Etat Actuel</h3></br>');
+    $m_pdf->pdf->WriteHtml('<p style="font-size:18px;">'.utf8_encode($libEtat).'</p></br></br></br>');
+     $m_pdf->pdf->WriteHtml('<h3>Montant Valide</h3>');
+      $m_pdf->pdf->WriteHtml('<p style="font-size:18px;">'.utf8_encode($montantValide).'?</p></br>');
+    
+    
+}*/
+$m_pdf->pdf->Output();
+}
 ?>
