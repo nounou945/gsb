@@ -57,9 +57,10 @@ switch($action){
                 } 
        if(isset($_REQUEST['idRP'])){
            $idRP=(int)($_REQUEST['idRP']);
-           var_dump($idRP);
            $pdo->reporterFraisHorsForfait($idRP);
+           
            echo "le frais HF choisi a ete reporte";
+           
        }
         if(isset($_REQUEST['idRF'])){
             $idRF=(int)($_REQUEST['idRF']);

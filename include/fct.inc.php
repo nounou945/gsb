@@ -201,7 +201,7 @@ function nbErreurs(){
 	}
 }
 /**
- * classe technique mpdf
+ * classe technique de mpdf
  */
 class M_pdf {
  
@@ -228,55 +228,57 @@ class M_pdf {
  * @param type $montantValide
  */
 function creerPdf($lesFraisFortfaits,$lesFraisHorsForfaits,$idVisiteur,$mois,$visiteur,$nbJustificatifs,$pdo,$libEtat,$montantValide){
-require_once('mpdf60/mpdf.php');
-$m_pdf= new M_pdf();
-$m_pdf->pdf->WriteHtml('<html>'
+
+$html="";
+$html.='<html>'
         . '<div id="entete">
         <img src="./images/logo.jpg" id="logoGSB" alt="Laboratoire Galaxy-Swiss Bourdin" title="Laboratoire Galaxy-Swiss Bourdin" />
       </div>
-      <table style="text-align:center;"><tr><td style="font-size:30px;">Fiche de '.utf8_encode($visiteur['nom']).' '.utf8_encode($visiteur['prenom']).'</td><td style="font-size:30px;">en '.utf8_encode($mois).'</td></tr></table>'
-        . '</br></br></br></br></br>');
+      <table style="text-align:center;"><tr><td style="font-size:30px;">Fiche de '.$visiteur['nom'].' '.$visiteur['prenom'].'</td><td style="font-size:30px;">en '.$mois.'</td></tr></table>'
+        . '</br></br></br></br></br>';
 if(isset($lesFraisFortfaits)){
-    $m_pdf->pdf->WriteHtml("<center><h3>descriptif des eléments forfaitaires</h3></center>"
-            . "<table style='width:100%;border-collapse:collapse;border:2px;font-size:24px;'><tr>");
+    $html.="<center><h3>descriptif des eléments forfaitaires</h3></center>"
+            . "<table style='width:100%;border-collapse:collapse;border:2px;font-size:24px;'><tr>";
     foreach ( $lesFraisFortfaits as $unFraisForfait ){
-     $m_pdf->pdf->WriteHtml('<th style="font-size:24px;border:2px solid black;text-align:center;">'.  utf8_decode($unFraisForfait['libelle']).'</th>');   
+     //$html.='<th style="font-size:24px;border:2px solid black;text-align:center;">'.$unFraisForfait['libelle'].'</th>'; 
+        $html.='<th style="font-size:24px;border:2px solid black;text-align:center;">'."1".'</th>'; 
     }
-    $m_pdf->pdf->WriteHtml('</tr ><tr>');
+    $html.='</tr><tr>';
     foreach ( $lesFraisFortfaits as $unFraisForfait ){
-     $m_pdf->pdf->WriteHtml('<td style="font-size:24px;border:2px solid black;text-align:center;">'.utf8_encode($unFraisForfait['quantite']).'</td>');
+     //$html.='<td style="font-size:24px;border:2px solid black;text-align:center;">'.$unFraisForfait['quantite'].'</td>';
+        $html.='<th style="font-size:24px;border:2px solid black;text-align:center;">'."2".'</th>'; 
     }
-    $m_pdf->pdf->WriteHtml("</tr></table>");
+    $html.="</tr></table>";
 }
 /*if(isset($lesFraisHorsForfaits)){
-    $m_pdf->pdf->WriteHtml("<h3 style='alignement:center;'>Descriptif des éléments hors forfait - ".utf8_encode($nbJustificatifs)."justificatifs reçus-</h3>");
-    $m_pdf->pdf->WriteHtml('<table style="width:100%;display:inline-block;border-collapse:collapse;border:2px solid black;">'
+   $html.="<h3 style='alignement:center;'>Descriptif des éléments hors forfait - ".$nbJustificatifs."justificatifs reçus-</h3>";
+    $html.='<table style="width:100%;display:inline-block;border-collapse:collapse;border:2px solid black;">'
             . ' <tr style="border:2px solid black;" >
                 <th class="date" style="font-size:18px;border:2px solid black;">Date</th>
                 <th class="libelle" style="font-size:24px;border:2px solid black;">Libellé</th>
                 <th class="montant" style="font-size:24pxborder:2px solid black;;">Montant</th>                
-             </tr>');
+             </tr>';
     foreach ( $lesFraisHorsForfaits as $unFraisHorsForfait ) 
 		  {
-        $m_pdf->pdf->WriteHtml('<tr style="border:2px solid black;">');
-        $m_pdf->pdf->WriteHtml('<td style="font-size:20px;">'.utf8_encode($unFraisHorsForfait["date"]).'</td>');
+        $html.='<tr style="border:2px solid black;">';
+        $html.='<td style="font-size:20px;">'.$unFraisHorsForfait["date"].'</td>';
         if($pdo->estRefuse($unFraisHorsForfait['id'])){
-            $m_pdf->pdf->WriteHtml('<td style="font-size:20px;border:2px solid black;text-align:center;">REFUSE:'.utf8_encode($unFraisHorsForfait['libelle']).'</td>');
+            $html.='<td style="font-size:20px;border:2px solid black;text-align:center;">REFUSE:'.$unFraisHorsForfait['libelle'].'</td>';
             
         }
         else{
-            $m_pdf->pdf->WriteHtml('<td style="font-size:20px;border:2px solid black;text-align:center;">'.utf8_encode($unFraisHorsForfait['libelle']).'</td>');
+            $html.='<td style="font-size:20px;border:2px solid black;text-align:center;">'.$unFraisHorsForfait['libelle'].'</td>';
         }
-        $m_pdf->pdf->WriteHtml('<td style="font-size:20px;border:2px solid black;text-align:center;">'.utf8_encode($unFraisHorsForfait["montant"]).'</td></tr>');
+        $html.='<td style="font-size:20px;border:2px solid black;text-align:center;">'.$unFraisHorsForfait["montant"].'</td></tr>';
     }
-    $m_pdf->pdf->WriteHtml('</table>');
-    $m_pdf->pdf->WriteHtml('<h3>Etat Actuel</h3></br>');
-    $m_pdf->pdf->WriteHtml('<p style="font-size:18px;">'.utf8_encode($libEtat).'</p></br></br></br>');
-     $m_pdf->pdf->WriteHtml('<h3>Montant Valide</h3>');
-      $m_pdf->pdf->WriteHtml('<p style="font-size:18px;">'.utf8_encode($montantValide).'?</p></br>');
+    $html.='</table>';
+    $html.='<h3>Etat Actuel</h3></br>';
+    $html.='<p style="font-size:18px;">'.$libEtat.'</p></br></br></br>';
+     $html.='<h3>Montant Valide</h3>';
+      $html.='<p style="font-size:18px;">'.$montantValide.'?</p></br>';
     
     
 }*/
-$m_pdf->pdf->Output();
+return $html;
 }
 ?>

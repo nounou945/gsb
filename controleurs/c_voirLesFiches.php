@@ -39,6 +39,9 @@ switch($action){
         echo"mise en payement effectue pour tout les visiteurs";
     break;
     case 'pdf': //rajout
+        require_once('mpdf60/mpdf.php');
+        $m_pdf= new M_pdf();
+        
         $idVisiteur=$_REQUEST['id'];
         $leMois=$_REQUEST['mois'];
         $totalHF=($pdo->totalHF($idVisiteur,$leMois));
@@ -57,8 +60,8 @@ switch($action){
 	$dateModif =  $lesInfosFicheFrais['datemodif'];
 	$dateModif =  dateAnglaisVersFrancais($dateModif);
         $visiteur=$pdo->getInfosPdf($idVisiteur, $leMois);
-        creerPdf($lesFraisForfait,$lesFraisHorsForfait,$idVisiteur,$leMois,$visiteur,$nbJustificatifs,$pdo,$libEtat,$montantValide);
-       
+        //$html=creerPdf($lesFraisForfait,$lesFraisHorsForfait,$idVisiteur,$leMois,$visiteur,$nbJustificatifs,$pdo,$libEtat,$montantValide);
+        include './vues/pdf.php';
        
         
         break;

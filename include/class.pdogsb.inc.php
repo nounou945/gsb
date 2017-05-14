@@ -397,25 +397,47 @@ where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois = '$mois'");
 		//}
 		//return $lesVisiteurs;
 	//}
+        
         /**
          * 
          * @param type $idFrais
          * reportent les frais hors forfaits
          */
         public function reporterFraisHorsForfait($idFrais){
-		$mois = "select mois from lignefraishorsforfait where id='$idFrais'";
-		PdoGsb::$monPdo->exec($date);
-                $leMois=  substr($date,0,4);
-                $annee=  substr($string,5,2);
-                if(leMois<12){
+		$req = "select mois,idvisiteur,montant from lignefraishorsforfait where id='$idFrais'";
+		$res=PdoGsb::$monPdo->query($req);
+                $laLigne=$res->fetch();
+                $mois=$laLigne["mois"];
+                $visiteur=$laLigne["idvisiteur"];
+                $montant=$laLigne["montant"];
+                
+                $annee= (int)(substr($mois,0,4));
+                $leMois=  substr($mois,5,2);
+                
+                if($leMois<12){
                     $leMois+=1;
+                    if($leMois<10){
+                        $leMois2="0"."$leMois";
+                    }
                 }
                 else{
                     $annee+=1;
+                    $leMois2="01";
                 }
-                $mois2=$leMois+"/"+$annee;
-                $req=("update  lignefraishorsforfait set mois='$mois2' where id='$idFrais'");
-                PdoGsb::$monPdo->exec($req);
+                    
+                $mois2=$annee."/".$leMois2;
+                //return $mois2;
+                $req2="select count(*) as nbl from fichefrais where mois='$mois2'";
+                PdoGsb::$monPdo->query($req2);
+                $laLigne=$res->fetch();
+                $nb=($laLigne["nbl"]);
+                if($nb=="0"){
+                $req0=("insert into fichefrais('idvisiteur', 'mois','nbjustificatifs','montantvalide', 'datemodif', 'idetat') values('$visiteur','$mois2',0,$montant,".date("Ymd").",CR");
+                PdoGsb::$monPdo->exec($req0);
+                }
+                $req2=("update  lignefraishorsforfait set mois='$mois2' where id='$idFrais'");
+                PdoGsb::$monPdo->exec($req2);
+                
 	}
         /**
          * 
@@ -534,10 +556,10 @@ where idvisiteur='$idVisiteur' and mois='$mois'");
          * @param type $idVisiteur
          * @param type $mois
          * @return type
-         * recupèrent les infos pour le pdf
+         * recup?rent les infos pour le pdf
          */
          public function getInfosPdf($idVisiteur, $mois){ //rajout
-		$req = "select visiteur.id,visiteur.nom,visiteur.prenom from visiteur";
+		$req = "select visiteur.id,visiteur.nom,visiteur.prenom from visiteur where visiteur.id='$idVisiteur'";
 		$res = PdoGsb::$monPdo->query($req);
 		$laLigne = $res->fetch();
 		return $laLigne;
