@@ -232,7 +232,7 @@ class PdoGsb{
 	public function creeNouveauFraisHorsForfait($idVisiteur,$mois,$libelle,$date,$montant){
 		$dateFr = dateFrancaisVersAnglais($date);
 		$req = "insert into lignefraishorsforfait 
-		values('','$idVisiteur','$mois','$libelle','$dateFr','$montant')";
+		values('','$idVisiteur','$mois','$libelle','$dateFr','$montant',0)";
 		PdoGsb::$monPdo->exec($req);
 	}
 /**
@@ -427,12 +427,13 @@ where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois = '$mois'");
                     
                 $mois2=$annee."/".$leMois2;
                 //return $mois2;
-                $req2="select count(*) as nbl from fichefrais where mois='$mois2'";
+                $req2="select count(*) as nbligne from fichefrais where mois='$mois2' and idvisiteur='$visiteur'";
                 PdoGsb::$monPdo->query($req2);
                 $laLigne=$res->fetch();
-                $nb=($laLigne["nbl"]);
-                if($nb=="0"){
-                $req0=("insert into fichefrais('idvisiteur', 'mois','nbjustificatifs','montantvalide', 'datemodif', 'idetat') values('$visiteur','$mois2',0,$montant,".date("Ymd").",CR");
+                $nb=(int)($laLigne["nbligne"]);
+                if($nb==0){
+                $req0=("insert into fichefrais(idvisiteur,mois,nbJustificatifs,montantValide,dateModif,idEtat) 
+		values('$visiteur','$mois2',0,0,now(),'CR')");
                 PdoGsb::$monPdo->exec($req0);
                 }
                 $req2=("update  lignefraishorsforfait set mois='$mois2' where id='$idFrais'");
